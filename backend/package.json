@@ -1,0 +1,35 @@
+{
+  "name": "student-registration-backend",
+  "version": "1.0.0",
+  "description": "REST API for the Student Registration System (Node.js + Express + MySQL).",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --coverage",
+    "lint": "eslint src tests",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\""
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0",
+    "dotenv": "^16.4.5",
+    "express-validator": "^7.2.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "express-rate-limit": "^7.4.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "nodemon": "^3.1.4",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3"
+  },
+  "license": "MIT"
+}

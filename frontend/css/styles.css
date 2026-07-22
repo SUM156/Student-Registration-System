@@ -1,0 +1,322 @@
+/* css/styles.css
+   Mobile-first: every base rule targets the smallest viewport; larger
+   layouts are added ONLY inside min-width media queries, never
+   overridden back down — this is what "mobile-first" means in
+   practice, as opposed to writing desktop styles and un-doing them
+   for mobile with max-width queries. */
+
+:root {
+  /* Design tokens: every color/spacing value used more than once is
+     named here, so a design change means editing one line, not
+     hunting through every rule that used a raw value. */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-danger: #dc2626;
+  --color-danger-dark: #b91c1c;
+  --color-success: #16a34a;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-surface: #ffffff;
+  --color-bg: #f3f4f6;
+
+  --radius: 10px;
+  --spacing-1: 0.5rem;
+  --spacing-2: 1rem;
+  --spacing-3: 1.5rem;
+  --spacing-4: 2rem;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-2);
+}
+
+/* --- Accessibility utilities --- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--color-primary);
+  color: #fff;
+  padding: var(--spacing-1) var(--spacing-2);
+  z-index: 100;
+}
+.skip-link:focus {
+  left: var(--spacing-1);
+  top: var(--spacing-1);
+}
+
+/* Consistent, visible focus state for keyboard users on every
+   interactive element — never remove :focus-visible without
+   replacing it with something equally visible. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --- Header / Footer --- */
+
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding-block: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+.site-title {
+  font-size: 1.4rem;
+}
+.site-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+.site-footer {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding-block: var(--spacing-3);
+  font-size: 0.85rem;
+}
+
+/* --- Toast (live status region) --- */
+
+.toast {
+  min-height: 0;
+  overflow: hidden;
+  transition: min-height 0.2s ease;
+}
+.toast:not(:empty) {
+  min-height: 2.5rem;
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius);
+  margin-bottom: var(--spacing-2);
+  font-weight: 600;
+}
+.toast--success {
+  background: #dcfce7;
+  color: var(--color-success);
+}
+.toast--error {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
+
+/* --- Card --- */
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+.card__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+.card__title {
+  font-size: 1.2rem;
+}
+
+/* --- Form (mobile-first: single column by default) --- */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-2);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.form-field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.required {
+  color: var(--color-danger);
+}
+.form-field input {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+.form-field input:invalid[data-touched='true'] {
+  border-color: var(--color-danger);
+}
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  min-height: 1.1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+/* --- Buttons --- */
+
+.btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+.btn--secondary {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+.btn--danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+.btn--danger:hover:not(:disabled) {
+  background: var(--color-danger-dark);
+}
+.btn--icon {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* --- Toolbar (search + filter) --- */
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+.toolbar input,
+.toolbar select {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+/* --- Table (horizontally scrollable on small screens rather than
+   silently clipping/overflowing the viewport) --- */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+table {
+  min-width: 640px;
+}
+th,
+td {
+  text-align: left;
+  padding: 0.7rem 0.6rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+th {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+tbody tr:hover {
+  background: var(--color-bg);
+}
+.row-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--spacing-3);
+}
+
+/* --- Pagination --- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacing-2);
+  font-size: 0.9rem;
+}
+
+/* --- Dialog --- */
+
+dialog {
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+  max-width: 400px;
+  width: 90%;
+}
+dialog::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+/* =========================================================
+   Responsive breakpoints (mobile-first: min-width only)
+   ========================================================= */
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .toolbar {
+    flex-direction: row;
+  }
+  .card__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (min-width: 900px) {
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

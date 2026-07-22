@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration System</title>
+  <meta name="description" content="Register, search, and manage student records." />
+
+  <!-- reset.css normalizes browser default styles; styles.css holds all
+       app-specific design. Kept separate so the "undo browser defaults"
+       layer never mixes with actual design decisions. -->
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Skip link: the first focusable element for keyboard/screen-reader
+       users, letting them bypass the header and jump straight to the
+       main content — a baseline accessibility requirement (WCAG 2.4.1). -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <h1 class="site-title">🎓 Student Registration System</h1>
+      <p class="site-subtitle">Register and manage student records</p>
+    </div>
+  </header>
+
+  <main id="main-content" class="container">
+    <!-- Live region: screen readers announce success/error messages here
+         as they appear, without the user needing to navigate to find them. -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <section class="card" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="card__title">
+        <span id="form-mode-label">Register New Student</span>
+      </h2>
+
+      <form id="student-form" novalidate>
+        <!-- Hidden field tracks the id of a student being edited; empty
+             means "create mode". Never rely on this alone for security —
+             the backend re-validates everything server-side regardless. -->
+        <input type="hidden" id="student-id" name="studentId" value="" />
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="fullName">Full Name <span class="required" aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              required
+              minlength="2"
+              maxlength="120"
+              autocomplete="name"
+              aria-describedby="fullName-error"
+            />
+            <span class="field-error" id="fullName-error" role="alert"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email <span class="required" aria-hidden="true">*</span></label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              maxlength="160"
+              autocomplete="email"
+              aria-describedby="email-error"
+            />
+            <span class="field-error" id="email-error" role="alert"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="phone">Phone <span class="required" aria-hidden="true">*</span></label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              placeholder="+92-300-1234567"
+              autocomplete="tel"
+              aria-describedby="phone-error"
+            />
+            <span class="field-error" id="phone-error" role="alert"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="course">Course <span class="required" aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="course"
+              name="course"
+              required
+              maxlength="100"
+              placeholder="BS Computer Science"
+              aria-describedby="course-error"
+            />
+            <span class="field-error" id="course-error" role="alert"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="enrollmentDate">Enrollment Date <span class="required" aria-hidden="true">*</span></label>
+            <input type="date" id="enrollmentDate" name="enrollmentDate" required aria-describedby="enrollmentDate-error" />
+            <span class="field-error" id="enrollmentDate-error" role="alert"></span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="submit-btn">Register Student</button>
+          <button type="button" class="btn btn--secondary" id="cancel-edit-btn" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="list-heading">
+      <div class="card__header">
+        <h2 id="list-heading" class="card__title">Registered Students</h2>
+
+        <div class="toolbar">
+          <label class="visually-hidden" for="search-input">Search by name or email</label>
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Search by name or email…"
+            aria-label="Search students by name or email"
+          />
+          <label class="visually-hidden" for="course-filter">Filter by course</label>
+          <select id="course-filter" aria-label="Filter by course">
+            <option value="">All courses</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrapper" role="region" aria-label="Student records" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Course</th>
+              <th scope="col">Enrolled</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="students-table-body">
+            <!-- Rows injected by js/ui.js -->
+          </tbody>
+        </table>
+        <p id="empty-state" class="empty-state" hidden>No students found.</p>
+      </div>
+
+      <nav class="pagination" aria-label="Student list pagination">
+        <button type="button" class="btn btn--secondary" id="prev-page-btn">← Previous</button>
+        <span id="pagination-label" aria-live="polite"></span>
+        <button type="button" class="btn btn--secondary" id="next-page-btn">Next →</button>
+      </nav>
+    </section>
+  </main>
+
+  <!-- Confirmation dialog for delete actions — native <dialog> element
+       gives free focus-trapping and Escape-to-close accessibility. -->
+  <dialog id="confirm-dialog">
+    <form method="dialog">
+      <p id="confirm-dialog-message">Are you sure you want to delete this student?</p>
+      <div class="form-actions">
+        <button type="submit" value="cancel" class="btn btn--secondary">Cancel</button>
+        <button type="submit" value="confirm" class="btn btn--danger">Delete</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built as part of the Startup Sindh Summer Internship 2026.</p>
+    </div>
+  </footer>
+
+  <!-- Loaded in dependency order: api -> validation -> ui -> main
+       (main.js wires the other three together and is loaded last). -->
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
